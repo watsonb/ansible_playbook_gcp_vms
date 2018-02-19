@@ -7,6 +7,50 @@ infrastructure
 
 - Google Cloud Platform account
 
+- libcloud with GCE support (0.17.0+)
+
+```bash
+pip install apache-libcloud==2.2.0
+```
+
+- pycrypto
+
+```bash
+pip install pycrypto
+```
+
+- certificates
+
+I'm not exactly sure this is necessary.  This is one of a myriad of
+troubleshooting steps I performed that resulted in something working.  In a
+fresh python virtualenv with `ansible` installed via `pip`, the below removed
+`certifi==2018.1.18`
+
+```bash
+pip uninstall -y certifi && pip install certifi==2015.04.28
+```
+
+- selinux
+
+This is kind of a pain in the butt if, like me, you like to use and abuse
+python virtual environments. see [this blog post](https://dmsimard.com/2016/01/08/selinux-python-virtualenv-chroot-and-ansible-dont-play-nice)
+
+You have a couple of workarounds:
+
+1. put this in your inventory (can sometimes mess up other plays)
+
+```
+localhost ansible_python_interpreter=/usr/bin/python
+```
+
+2. copy the `selinux` python module from your system site-packages into your
+virtualenv's site-packages
+
+```bash
+sudo cp -R /usr/lib64/python2.7/site-packages/selinux <your_venv>/site-packages
+sudo chown -R <appropriate user/group> <your_venv>/lib64/python2.7/site-packages/selinux
+```
+
 ## Inventory Dependencies
 
  - See [inventories/README.md](./inventories/README.md) for more information
